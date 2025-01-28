@@ -1,0 +1,128 @@
+---
+title: "Activity 03B - Joining Data Frames"
+author: "STS 2300"
+date: 'Updated: 2025-01-28'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Load required packages here - change options to remove messages
+
+library(dplyr)
+library(Lahman) # You may need to install this one first
+```
+
+There is an online game called [Immaculate Grid](https://www.immaculategrid.com/) where people (i.e. sports nerds) are asked to think of players who meet certain criteria. In the baseball version of the game, an example would be coming up with someone who played for the Minnesota Twins and recorded 200 hits in a season.
+
+An R package called `Lahman` includes multiple baseball related data frames with different kinds of information that can help us practice data wrangling along with a new skill called joining data frames.
+
+
+<br>
+
+
+1. There is a data set called `Batting` in the `Lahman` package. Use a function like `str()` or `summary()` to explore the `Batting` data frame. How many observations are there, and how many variables?
+
+```{r}
+
+```
+
+**Observations:**
+
+**Variables:**
+
+<br>
+
+
+2. Using the `Batting` data frame, write code to find all observations where someone played for the Minnesota Twins (variable `teamID` of `MIN`) and recorded at least 200 hits (variable `H`). Store the result in an object called `results`. How many rows are there? How many different players are there?
+
+```{r}
+
+```
+
+**Number of rows:**
+
+**Number of different players:**
+
+<br>
+
+
+3. This output isn't very useful because most people won't know who `olivato01` is. However, we could find that out by using the `People` data frame. This data frame includes biographical information including a player's first and last name. We can use **join functions** to combine the information from our two data frames. When we use the function `left_join()` from the `dplyr` package, we take all of the observations in our first data frame and add information from the second data frame that matches a common key. Remove `eval = FALSE` and observe the results of the new data frame.
+
+```{r, eval = FALSE}
+left_join(results, People, by = join_by(playerID))
+```
+
+**Note:** Both your results data frame and the People data frame include a column called `playerID`. The `by = join_by(playerID)` argument is telling R to find the same playerID in both data sets and to combine the columns. Using the `olivato01` example above, each row in results that says `olivato01` for playerID will now include the values from the columns for the row in People that has this same playerID.
+
+<br>
+
+
+4. In addition to choosing which variables we keep from a data frame, the `select()` function also lets us choose an order. Take the code from the previous question and use `select()` so that we only see `nameFirst`, `nameLast`, `yearID`, `H`. Now we have something that might be useful to a person playing this game!
+
+```{r}
+
+```
+
+<br>
+
+
+5. Another function you might want to use is called `inner_join()`. This function will return only rows that have matching values in **both** data frames. Sometimes Immaculate Grid will ask people to name a player who played for two different teams. Suppose we want to determine hitters (`Batting` data frame) who played for the the Boston Red Sox (teamID of BOS) and the New York Yankees (teamID of NYA). Start by creating a data frame called `BOS` that only includes Red Sox players. Then summarize that data frame by player with a variable called `Seasons` that counts how many times each player shows up in the data. Then count the number of times a player shows up using `summarize()` and `.by = playerID`.
+
+```{r}
+
+```
+
+<br>
+
+
+6. Now do the same thing for the Yankees to create an object called `NYA`.
+
+```{r}
+
+```
+
+<br>
+
+
+7. Once you have both data frames, use `inner_join()` to join them by `playerID`. Your code will look very similar to when we used `left_join()`. What does your resulting data frame look like?
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+8. At this point, we likely want to rename our Seasons.x and Seasons.y columns and add names from the `People` data frame again. See if you can produce a data frame that lists only:
+
+  - nameFirst
+  - nameLast
+  - BOS_Seasons
+  - NYA_Seasons
+  
+Hint: you'll have to rename two variables to get the last two in the list.
+  
+```{r}
+
+```
+
+**How many batters played for both teams?**:
+
+
+<br>
+
+
+**Note:** Want to learn more about joining data frames together?
+
+  - [Section 3.7 of ModernDive](https://moderndive.com/3-wrangling.html#joins) includes examples using airline data
+  - [Chapter 20 of R for Data Science](https://r4ds.hadley.nz/joins) uses similar examples
+  - [Chapter 5 of Modern Data Science with R](https://mdsr-book.github.io/mdsr3e/05-joins.html) uses an airline example and a baseball example
