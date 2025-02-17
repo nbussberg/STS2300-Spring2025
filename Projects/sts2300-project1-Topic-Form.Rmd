@@ -1,0 +1,27 @@
+---
+title: "Project 1 Topic"
+author: "Put your names here"
+date: "Due Friday, February 21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Your topic
+
+[Replace this paragraph with your response to the prompt.] Use this space to tell me what topic or data you plan to use. This should include a general research direction or question of interest. Include code below to read your data into the .Rmd file. If you are using data that is not through a URL, you should email your data file to me along with your .Rmd and .html files.
+
+```{r}
+
+```
+
+# Very brief example of working with data
+
+Provide a **very** brief example of one or two things you can do with this data (e.g., exploring the structure, calculating a statistic, making a basic graph, etc.). The goal of this is just for you to demonstrate you can work with the data.
+
+```{r}
+
+```
+
