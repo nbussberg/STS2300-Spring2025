@@ -1,0 +1,141 @@
+---
+title: "Homework 2"
+author: "Put Your Name Here"
+date: 'Due: Friday, February 28'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+# Note About Answering Homework Questions With New Approaches
+
+**There are multiple ways to accomplish the tasks described in this homework assignment. If you use methods that we did not discuss in class (e.g. notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want.**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+```
+
+---
+
+# Part 1 - Math/Stats Majors Data
+
+1. Download the **MTH_STS_Majors.xlsx** file from the Data Files folder on the course Github page. Store it in the same location as this .Rmd file. Add code below to read the data set into R as an object called `majors`. (Note: If you need to load any R packages to do this (e.g., to read in an Excel file), you should put the code to load them up above.)
+
+```{r}
+
+```
+
+<br>
+
+
+2. Convert the data from wide format to long format. The `Year` and `ArtsSciences` columns will remain the same. Your long format data will have two other columns: `Major` and `Count`. Call this new data frame `majors_long`. (Note: You will likely need to load the `tidyr` pacakge. Add this at the top of the document.)
+
+```{r}
+# If you were unable to read in the data in question 1, you can uncomment the
+# line below so that you can still do the remaining questions. Otherwise,
+# delete these comments at the top.
+# 
+# majors <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/MTH_STS_Majors.csv")
+
+
+```
+
+<br>
+
+
+3. Create a new variable in your `majors_long` data frame called `MajorsPer100` that calculates the number of majors per 100 students in the College of Arts and Sciences. This can be done by taking your `Count` variable and dividing by the `ArtsSciences` variable and then multiplying by 100.
+
+```{r}
+# If you were unable to tranform the data in question 2, you can uncomment the
+# line below so that you can still do the remaining questions. Otherwise,
+# delete these comments at the top.
+# 
+# majors_long <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/MTH_STS_majors_long.csv")
+
+
+```
+
+<br>
+
+
+4. Write code to get rid of the `ArtsSciences` variable from your `majors_long` data frame. Then print the first 4 and last 4 rows of your new data frame so that they show up in your knitted file.
+
+```{r}
+
+```
+
+<br>
+
+
+5. The code chunk below is set to `eval = FALSE`. Write code using the pipe operator that will accomplish questions 1 - 4 all in one step. In other words, you will only use the assignment operator once to go from reading your data in all the way to creating the data frame in Question 4. (Note: You do not need to print the first and last 4 rows as part of this step.)
+
+```{r, eval = FALSE}
+
+```
+
+<br>
+
+
+6. In the space below, write a sentence using in-line R code that tells the reader the largest number of Stats majors there have ever been in a year and the average number of Math majors (not applied math) each year. Note: Make sure you don't get an NA in your knitted document - you may need to explore function documentation to learn how to avoid getting an NA result.
+
+**Your sentence(s):**
+
+<br>
+
+
+---
+
+# Part 2 - Billboard Hot 100
+
+7. The [following link](https://en.wikipedia.org/wiki/List_of_Billboard_Hot_100_number-one_singles_of_the_2020s) includes a table with all of the songs to reach number one on the Billboard Hot 100 list since 2020. I've created an object called `url` below that includes the link. Use the `rvest` package to create a data frame of this data called `billboard`. Once you've done that, uncomment the code to rename the columns. (Note: You'll need to add the code to load `rvest` at the top of the document with the other packages you're using.)
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_Billboard_Hot_100_number-one_singles_of_the_2020s"
+
+
+#colnames(billboard) <- c("Number", "Date", "Artist", "Song", "Weeks", "References", "Empty")
+```
+
+<br>
+
+
+8. Now let's clean up the `billboard` data. Write code that does each of the following:
+
+  - Remove the rows that only list years (2020, 2021, 2022, 2023, 2024). (Hint: Use `filter()` and the not equals option.)
+  - Subset the data to only include columns for the artist, song name, and weeks at number one.
+  - Convert the `Weeks` variable to numeric (Hint: You can use `mutate()` and a function mentioned in Notes 02 when we talked about how R stores different types of data. There will be a warning because the final song has an asterisk next to its number, so it will be converted to NA. Also, note that R will mistakenly convert numbered superscripts to regular numbers for Weeks, but we aren't going to deal with this variable and thus will ignore it.)
+
+```{r}
+
+```
+
+<br>
+
+
+9. Write code that creates a data frame counting how many number one songs each artist had, then remove all artists with only 1 number one song. Sort the remaining artists in descending order by number of songs.
+
+```{r}
+
+```
+
+<br>
+
+---
+
+# Reflection
+
+10. Reflection: Answer one (or both) of the following questions. Your answer should be at least 3 - 4 sentences long and demonstrate some level of reflection (i.e., not just a few words).
+
+  - What's something that has been challenging for you in the class so far. What has made it challenging and how could that challenge be addressed moving forward?
+  - What's something you want to learn how to do with R before the semester is done? Why is this something you're interested in learning?
+  
+**Answer**
