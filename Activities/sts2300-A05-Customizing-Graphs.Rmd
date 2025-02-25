@@ -1,0 +1,93 @@
+---
+title: "Activity 05 - Customizing Spring Graphs"
+author: "STS 2300"
+date: 'Updated: 2025-02-25'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(readr)
+library(dplyr)
+```
+
+For this activity, you will choose one of the data sets below and create a graph with your own customized theme. Everyone will email me your graph with the code to produce it. Once collected, we will spend time in class discussing your graphs and the choices you made to customize it. 
+
+[This website](https://henrywang.nl/ggplot2-theme-elements-demonstration/) contains a nice example of elements of a theme that we can control.
+
+[Chapter 11](https://r4ds.hadley.nz/communication) of R for Data Science may also be useful.
+
+Since the focus is on customizing themes, scales, etc. (and not necessarily the graphs themselves), I've created a sample graph for each data set that you are welcome to use (though please feel free to change it to something else if you'd like). You can find an example of a customized Elon theme in Notes 05. You may want to use this as a template to get started.
+
+---
+
+# Global temperatures
+
+This dataset from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-07-11/readme.md) looks at global temperatures in the Northern Hemisphere. Specifically, it is tracking the deviation in mean monthly temperature from the 1951-1980 mean. The MAM variable combines March, April, and May into one average.
+
+```{r, message = FALSE}
+nh_temps <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-07-11/nh_temps.csv')
+
+ggplot(nh_temps, aes(x = Year, y = MAM)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(yintercept = 0) +
+  labs(title = "Average monthly temp above / below 1951-1980 mean",
+       subtitle = "March, April, and May",
+       y = "Average deviation from 1951 - 1980 mean")
+```
+
+---
+
+# NC Weather Forecasts
+
+This dataset from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-12-20) includes temperature data from many US cities. I've created a graph that takes the four North Carolina cities and compares their high and low temperatures in the spring (March, April, May).
+
+(Note: The lubridate package is useful for working with dates in R. You may need to install it to run this code.)
+
+```{r, message = FALSE, warning = FALSE}
+library(lubridate)
+
+weather_forecasts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-12-20/weather_forecasts.csv') |> 
+  mutate(Spring = month(date) %in% c(3, 4, 5)) |> 
+  filter(Spring,
+         state == "NC")
+
+ggplot(weather_forecasts, aes(x = observed_temp, y = city, fill = high_or_low)) +
+  geom_boxplot() +
+  labs(title = "Spring Temperatures")
+```
+
+
+# Australian Birds
+
+This dataset from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-31/readme.md) includes information on which birds visit bird baths in Australia.
+
+(Note: The tidytext package is being used to sort the y-axis categories from highest to lowest count within each facet. You may need to install it to run this code.)
+
+```{r, message = FALSE}
+library(tidytext) 
+
+bird_baths <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-08-31/bird_baths.csv')
+
+bird_summary <- bird_baths |> 
+  filter(!is.na(urban_rural)) |> 
+  summarize(count = sum(bird_count), 
+            .by = c(bird_type, urban_rural)) |> 
+  slice_max(n = 10, order_by = count, by = urban_rural) |> 
+  mutate(bird_type = reorder_within(bird_type, count, urban_rural))
+         
+ggplot(bird_summary, aes(x = count,
+                         y = bird_type)) +
+  geom_point() +
+  facet_wrap(vars(urban_rural),
+             scales = "free_y") +
+  labs(title = "Top 10 Bird Bath Visitors in Australia") +
+  scale_y_reordered()
+```
+
