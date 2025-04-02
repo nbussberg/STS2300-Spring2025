@@ -1,0 +1,196 @@
+---
+title: "Activity 08 - Sampling and Bootstrap Distributions"
+author: "STS 2300"
+date: 'Updated: 2025-04-01'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+We will use the following R packages during today's activity.
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(dplyr)
+library(Lock5Data)
+library(moderndive)
+library(patchwork)
+```
+
+---
+
+In Notes 08, we used a data set of party affiliation in the House of Representatives to explore the idea of bootstrap distributions (and how those compared to things like sampling distributions, distributions for a sample, and distributions for a population). In that example, our population (and sample) consisted of categorical data and our sampling and bootstrap distributions were for sample proportions. In this activity, let's look at a similar example where we start with quantitative data.
+
+**Note: The variable you are working with in this activity includes some missing values. When using the `mean()` and `sd()` functions, you will need to add the `na.rm = TRUE` argument to remove NA values from the calculations.**
+
+<br>
+
+1. Let's use the `AllCountries` data set from the `Lock5Data` package. This will be our population since it includes data from all countries of the world. Make a histogram of the `Rural` variable. Consider setting `binwidth` to a reasonable value and setting `boundary` to 0. Give your graph a title that indicates this is the distribution of our population. Lastly, calculate the population mean $\mu$ and population standard deviation $\sigma$.
+
+```{r}
+graph_pop <- ggplot(AllCountries, aes(x = Rural)) +
+  geom_histogram(boundary = 0,
+                 color = "white",
+                 binwidth = 5) +
+  labs(title = "Graph of Population")
+graph_pop
+
+mu <- mean(AllCountries$Rural, na.rm = TRUE)
+sigma <- sd(AllCountries$Rural, na.rm = TRUE)
+```
+
+**Pop mean =** `r round(mu, 1)`
+
+**Pop SD =** `r round(sigma, 1)`
+
+<br>
+
+
+2. Now let's take a random sample of 50 countries from the population. You can use the `rep_sample_n()` function from the `moderndive` package to do this. Store your sample in an object called `mysample`. Then create a histogram of the `Rural` variable in your sample. Use the same `binwidth` and `boundary` arguments as your graph of your population. Give this one a title indicating it is the distribution of your sample. (Note: Remember that we want to use the `set.seed()` function before we use randomness in our code.) Lastly, calculate the sample mean $\bar{x}$ and sample standard deviation $s$.
+
+```{r}
+set.seed(95641) # added after we ran this code the first time
+
+mysample <- rep_sample_n(AllCountries, size = 50)
+
+graph_sample <- ggplot(mysample, aes(x = Rural)) +
+  geom_histogram(boundary = 0,
+                 color = "white",
+                 binwidth = 5) +
+  labs(title = "Graph of Sample",
+       subtitle = "Sample size of 50")
+graph_sample
+
+xbar <- mean(mysample$Rural, na.rm = TRUE)
+s <- sd(mysample$Rural, na.rm = TRUE)
+```
+
+**Sample mean =** `r round(xbar, 1)`
+
+**Sample SD =** `r round(s, 1)`
+
+<br>
+
+
+3. What is similar and what is different between your two distributions thus far?
+
+**Answer:** Both contain values from 0 to 80 or so. The pattern is a little different but both show bars of roughly the same height across the lower half of the graph and then shorter bars on the right side.
+
+<br>
+
+
+4. Now let's approximate the sampling distribution for the sample mean by taking 1,000 random samples of size 50 from `AllCountries`. Then you will need to calculate the sample mean `Rural` value for each sample. Remember that you can do this using the `summarize()` function from the `dplyr` package. Store your result in an object called `sampling_dist`. 
+
+```{r}
+sampling_dist <- AllCountries |> 
+  rep_sample_n(size = 50,
+               reps = 1000) |> 
+  summarize(xbar = mean(Rural, na.rm = TRUE))
+```
+
+<br>
+
+
+5. Create a histogram of your sampling distribution. Give it a title that indicates this is your sampling distribution. Does it make sense to use the same `bin_width` as before? Why or why not?
+
+```{r}
+graph_sampling <- ggplot(sampling_dist, aes(x = xbar)) +
+  geom_histogram(boundary = 0,
+                 color = "white",
+                 binwidth = 1) +
+  geom_vline(xintercept = mu,
+             color = "blue") +
+  labs(title = "Graph of Sampling Distribution",
+       subtitle = "1000 Samples of size of 50",
+       caption = "Population mean in blue")
+graph_sampling
+```
+
+**Answer:** No because now our values only go from around 30 to 50 instead of from 0 to 80. With a narrower range, it doesn't make sense to stick with a binwidth as high as we did before.
+
+<br>
+
+
+6. How does your sampling distribution compare to the two previous distributions? Why does it differ from those more than they differ from one another?
+
+**Answer:** This distribution is narrower (values from 30 to just over 45) and is shaped more like a bell curve. The reduced spread is because we are graphing sample means instead of individual values. It is much less likely to get a sample mean that is very small or very large because those types of values will cancel one another out in our sample. It makes sense that the sampling distribution will look different because we are plotting sample means, not individual observations.
+
+<br>
+
+
+7. For our last distribution, we are going to make a bootstrap distribution from our sample we took in question 2 (object called `mysample`). Use the `rep_sample_n()` function to take 1,000 samples of size 50 from your original sample. Remember that we will need to take these samples **with replacement**, so you'll need to change the corresponding argument to do that. Calculate the sample mean `Rural` value for each of your bootstrap resamples and store them in an object called `boot_dist`.
+
+```{r}
+# The second and third lines below are needed because of how the rep_sample_n()
+#  function creates a replicate variable and uses it to group the data. In the
+#  future, we will use a different function and you will not need to worry about
+#  doing this.
+
+boot_dist <- mysample |> 
+  ungroup() |> 
+  select(-replicate) |> 
+  rep_sample_n(size = 50,
+               reps = 1000,
+               replace = TRUE) |> 
+  summarize(xbar = mean(Rural, na.rm = TRUE))
+```
+
+<br>
+
+
+8. Create a histogram of your bootstrap distribution. Give it a title that indicates this is your bootstrap distribution. What is similar and different between your bootstrap and sampling distributions?
+
+```{r}
+graph_boot <- ggplot(boot_dist, aes(x = xbar)) +
+  geom_histogram(boundary = 0,
+                 color = "white",
+                 binwidth = 1) +
+  geom_vline(xintercept = xbar,
+             color = "red") +
+  labs(title = "Graph of Bootstrap Distribution",
+       subtitle = "1000 Samples of size of 50 (with replacement) from our original sample",
+       caption = "Sample mean in red")
+graph_boot
+```
+
+**Answer:** The bootstrap distribution has a similar shape, and it has a smaller spread that the population / sample (like the sampling distribution did). It appears to be centered right at 40 (the sample mean) whereas the sampling distribution was centered just below 40 (the population mean).
+
+<br>
+
+
+9. Lastly, use the `patchwork` package to put these four graphs into a grid. Then briefly explain (i) what each graph shows, (ii) what value (population mean or sample mean) should be at/near the center of each graph, and (iii) whether their spread is closer to the population standard deviation of 24 or $\frac{24}{\sqrt{50}} = 3.4$.
+
+```{r}
+(graph_pop + graph_sampling) / (graph_sample + graph_boot)
+```
+
+**Distribution of the population:** 
+
+  - Values for the rural variable from our population. 
+  - The population mean should be near the center of the graph and 
+  - it has a population standard deviation of 24.
+
+**Distribution of the sample:** 
+
+  - Values for the rural variable from our sample. 
+  - The sample mean should be near the center of the graph and 
+  - it has a standard deviation somewhat near the population standard deviation of 24.
+
+**Sampling distribution:** 
+
+  - Sample mean rural values from random samples out of the population. 
+  - The population mean should be near the center of the graph and 
+  - it has a standard deviation (aka standard error) around 3.4
+
+**Bootstrap resampling distribution:** 
+
+  - Sample mean rural values from random samples (with replacement) out of our original sample.
+  - The sample mean should be near the center of the graph and 
+  - it has a standard deviation (aka standard error) around 3.4.
+
+
