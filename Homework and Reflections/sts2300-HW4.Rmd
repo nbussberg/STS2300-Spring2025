@@ -1,0 +1,132 @@
+---
+title: "Homework 4"
+author: "put your name here"
+date: 'Due: 2025-04-11'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+**As a reminder, there are multiple ways to accomplish the tasks described in this homework assignment. If you use methods that we did not discuss in class (e.g., notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` and `ggplot2` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+
+---
+
+
+# SLR - Amazon Prices
+
+You will use the `amazon_books` data set from the `moderndive` package. Add code to load the package with the other packages at the top of this script.
+
+1. Suppose we wish to predict the price of books on Amazon using their list price. Which variable is the explanatory variable and which variable is the response variable?
+
+**Explanatory variable:** 
+
+**Response variable:** 
+
+<br>
+
+
+2. Create a scatterplot for the question above that includes the simple linear regression line on it. Describe the general pattern you see in the data.
+
+```{r}
+
+```
+
+**Description:** 
+
+<br>
+
+
+3. Use R to determine the equation for the simple linear regression line. Write the equation in the space below your code.
+
+```{r}
+
+```
+
+**Equation:** $\widehat{y} = b_0 + b_1 * x$
+
+<br>
+
+
+4. Use your line to predict the Amazon price of books with list prices of \$10, \$50, and \$200. Are any of these considered outliers? Why or why not?
+
+```{r}
+
+```
+
+**Answer:** 
+
+<br>
+
+
+5. Write a sentence interpreting the slope of your line in context of this example (e.g., using specific variables and appropriate units).
+
+**Answer:** 
+
+<br>
+
+
+6. Write a sentence interpreting the y-intercept in context of this example (e.g., using specific variables and appropriate units).
+
+**Answer:** 
+
+<br>
+
+
+7. Calculate the $R^2$ value and write a sentence interpreting it in context.
+
+```{r}
+
+```
+
+**Answer:** 
+
+
+---
+
+# MLR - Amazon Prices
+
+8. Suppose we wish to add the number of pages (`num_pages`) as an explanatory variable to our model. Use R to determine the new equation for the multiple linear regression line. Write the equation in the space below your code.
+
+
+```{r}
+
+```
+
+**Equation:**
+
+<br>
+
+
+9. Use your line to predict the Amazon price of a book with a list price of \$30 that has 250 pages.
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+10. Write a sentence interpreting the slope for the list price in context of this example (e.g., using specific variables and appropriate units).
+
+**Answer:** 
+
+<br>
+
+
