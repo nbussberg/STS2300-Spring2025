@@ -1,0 +1,195 @@
+---
+title: "Activity 10 - Practicing With Intervals for a Single Value"
+author: "STS 2300"
+date: 'Updated: 2025-04-06'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+---
+
+
+# Part 1 - Dog identifying COVID-19 samples correctly
+
+For this activity, we'll look at a study where researchers trained a dog to smell COVID-19 virus. If you're interested, you can read more about it (and watch a video) [here](https://nerdist.com/article/dogs-sniff-out-covid/).
+
+1. I've created a data frame using the data mentioned in the article. For now, we will just focus on how well the dog was able to identify cases that were positive for COVID-19. We will compare this to cases that were negative for COVID-19 in Activity 11. Use the code below to read the data into R. Then calculate the sample proportion that the dog correctly identified. Note: the `ID` variable lists whether the dog identified the case as positive for COVID-19 or negative. All cases in the sample, though, we in fact positive. 
+
+```{r}
+pos_cases <- data.frame(ID = c(rep("positive", 157), rep("negative", 30)))
+```
+
+**Sample proportion:**
+
+<br>
+
+
+2. Create a bar graph comparing the number of positive samples that were correctly and incorrectly identified. This is the distribution of your sample.
+
+```{r}
+
+```
+
+<br>
+
+
+3. This was just one sample. What we're really interested in is how well this dog would do in the long run. What is our parameter of interest? Write it out in words.
+
+**Answer:**
+
+<br>
+
+
+4. Generate a bootstrap distribution of 1,000 sample proportions. Create a histogram of your 1,000 sample proportions from this distribution. Since we're going to be using randomization, let's set a seed here so that we can reproduce our results in the future. I've gotten you started with the code below. When you're ready to run the code, change `eval = FALSE` to `eval = TRUE`.
+
+```{r, eval = FALSE}
+set.seed(20240405)
+pos_boot <- ____ |> 
+  specify(formula = ____ ~ NULL, success = "____") |> 
+  generate(reps = 1000, type = "bootstrap") |> 
+  calculate(stat = "____")
+visualize(____)
+```
+
+
+<br>
+
+
+5. Create a 95% confidence interval using either the standard error method or the percentile method. Write the interval below.
+
+```{r}
+
+```
+
+**95% CI:**
+
+**Method used:**
+
+<br>
+
+
+6. Provide a sentence interpreting your interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+7. Suppose we wanted a narrower interval than the one we got. How could we achieve that?
+
+**Answer:**
+
+<br>
+
+
+8. Calculate a 95% confidence interval using the appropriate theory-based method function. Is it reasonable to use a theory-based method in this situation? Why or why not?
+
+```{r}
+
+```
+
+**95% CI:**
+
+**Explanation:**
+
+<br>
+
+
+---
+
+# Part 2 - How much college students sleep
+
+Below, I load in a dataset from a study related to sleep and grades of college students. For now, let's focus just on the amount of sleep students get. The code below will read the data into R, convert sleep time from minutes to hours, and subset the data to focus on only one of the five studies.
+
+```{r}
+sleep <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/sleep_gpa_studies.csv") |> 
+  mutate(sleep_hrs = TotalSleepTime / 60) |> 
+  filter(study == 4) |> 
+  select(sleep_hrs)
+```
+
+<br>
+
+
+9. Make a graph exploring the distribution of the `sleep_hrs` variable. Describe what the graph shows about this data.
+
+```{r}
+
+```
+
+**Graph description:**
+
+<br>
+
+
+10. Calculate the sample mean hours of sleep in this study.
+
+```{r}
+
+```
+
+**Estimate:**
+
+<br>
+
+
+11. Create a bootstrap distribution of 1,000 sample means to get a better sense as to how much our estimate would vary from sample to sample. Make a histogram of your bootstrap sample means. (Note: The `set.seed()` line will ensure we get the same result each time we knit our document. You should replace the number with a number of your choosing.)
+
+```{r}
+set.seed(3194)
+
+```
+
+<br>
+
+
+12. Describe the graph you created in the previous question (e.g. shape, center, spread).
+
+**Histogram description:**
+
+<br>
+
+
+13. Create a 90% confidence interval using your bootstrap distribution and write it below. Use whichever method (SE or percentile) you did not use in Part 1.
+
+```{r}
+
+```
+
+**90% CI:**
+
+**Method used:**
+
+<br>
+
+
+14. Provide an interpretation of your interval in context of this example. (Note: Remember that we are studying college students.)
+
+**Interpretation:**
+
+<br>
+
+
+15. Calculate a 90% confidence interval using the appropriate theory-based method function. Is it reasonable to use a theory-based method in this situation? Why or why not?
+
+```{r}
+
+```
+
+**90% CI:**
+
+**Explanation:**
+
+<br>
