@@ -1,0 +1,207 @@
+---
+title: "Homework 5"
+author: "Put Your Name Here"
+date: 'See course timeline for due dates'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+**As a reminder, there are often multiple ways to accomplish the tasks described in your homework assignments. If you use methods that we did not discuss in class (e.g., notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want.**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` and `infer` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(infer)
+```
+
+---
+
+# Part 1 - NC School Math Proficiency
+
+Let's revisit the data on testing proficiency in North Carolina schools. The code below will read the data into R and subset it to only include math scores from 2023.
+
+```{r}
+nc_math <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/NC_School_Proficiency_Long.csv") |> 
+  filter(Subject == "Math Grade 3-8",
+         Year == "2023%")
+```
+
+<br>
+
+1. Run the code below to take a random sample of 100 NC schools. Calculate the mean proficiency score of the schools in your sample.
+
+```{r}
+set.seed(23004)
+school_sample <- sample_n(nc_math, size = 100)
+
+```
+
+$\bar{x}$ =  
+
+<br>
+
+
+2. Use the `infer` package to generate a bootstrap distribution of 1,000 sample means based on this data. Create a histogram of your distribution with your estimate from the previous question added to your graph. Don't forget to set a seed before your bootstrap distribution.
+
+```{r}
+
+```
+
+<br>
+
+
+3. Describe important characteristics of your bootstrap distribution (e.g., shape, center, spread). Include why your estimate from the previous question shows up where it does on your graph.
+
+**Answer:**
+
+<br>
+
+
+4. Generate a 95% confidence interval based on your bootstrap distribution using either the percentile method or the standard error method. Report the interval below using proper notation.
+
+```{r}
+
+```
+
+**95% CI:**
+
+<br>
+
+
+5. Explain how your chosen method creates confidence intervals as applied to this example. (Note: This does not mean to tell me what functions you used. Instead, you should briefly describe the process that creates the interval)
+
+**Explanation:**
+
+<br>
+
+
+6. Write a sentence interpreting your confidence interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+7. Suppose you shared your interval with state officials who decided the confidence interval was too wide for them to effectively reach conclusions. What are two things they could do to reduce the width of your confidence interval? For each option, what is a downside to using this option to reduce the CI width?
+
+**Option 1 (include downside):**
+
+**Option 2 (include downside):**
+
+<br>
+
+
+8. Calculate a **99%** confidence interval for this example using a theory-based method.
+
+```{r}
+
+```
+
+**99% CI:**
+
+<br>
+
+---
+
+
+# Part 2 - NC Sports Betting
+
+The Elon Poll [surveyed](https://eloncdn.blob.core.windows.net/eu3/sites/819/2023/06/Elon-Poll-Report-061423.pdf) registered voters in North Carolina on a variety of topics. One of those topics was whether sports betting should be legal in North Carolina. The code below creates a data frame with the results of their survey.
+
+```{r}
+betting <- data.frame(opinion = c(rep("support", 839),
+                                  rep("oppose", 427)))
+```
+
+<br>
+
+
+9. Calculate an estimate for the proportion of registered voters in North Carolina who support making sports betting legal.
+
+```{r}
+
+```
+
+**Estimate:**
+
+<br>
+
+
+10. Generate a bootstrap resampling distribution of 1,000 sample proportions. Make a histogram of these values. Describe what this specific graph shows (include things like center, spread, and shape).
+
+```{r}
+
+```
+
+**Description:**
+
+<br>
+
+
+11. Calculate a 90% confidence interval for a proportion. Use the opposite method that you used in Part 1 (e.g., if you used percentile method there, use standard error method here, and vice versa). Report the interval below.
+
+```{r}
+
+```
+
+**90% Confidence interval:**
+
+<br>
+
+
+12. Write a sentence interpreting your confidence interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+13. Calculate a **90%** confidence interval for this example using a theory-based method.
+
+```{r}
+
+```
+
+**90% CI:**
+
+<br>
+
+---
+
+# Part 3 - Short Answer
+
+14. Are the theory-based intervals you calculated similar to the bootstrap intervals for the two examples above? Explain why or why not. (Hint: Consider how the intervals are constructed and which conditions have or have not been met.)
+
+**Explanation:**
+
+<br>
+
+
+15. Explain the difference between a bootstrap distribution and a sampling distribution. Which quantity should be at the center of each and why?
+
+**Answer:**
+
+<br>
+
+
+---
+
+# Reflection
+
+
+16. Answer one (or both) of the following questions. Be sure to give a complete answer to the question(s) you choose (i.e., more than just a sentence or two).
+
+  - What's something from a recent set of notes that isn't entirely clear to you and what would it take to help solidify your understanding of the concept?
+  - What's an example of how you've used confidence intervals in the past or envision using them in the future? What type of interval(s) did/will you use? What was/is the goal of using them in that context?
+  
+**Answer:**
+
