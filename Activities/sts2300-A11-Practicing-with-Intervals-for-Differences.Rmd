@@ -1,0 +1,199 @@
+---
+title: "Activity 11 - Practicing with Intervals for Differences"
+author: "STS 2300"
+date: 'Updated: 2025-04-14'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+---
+
+
+# Part 1 - Fidget spinners and attention
+
+A study looked at the effect that fidget spinners have on attention and memory. You can read an article about it [here](https://www.psypost.org/2019/11/study-finds-using-a-fidget-spinner-can-impair-memory-and-attention-54904) or look at the research paper [here](https://onlinelibrary.wiley.com/doi/full/10.1002/acp.3610) if you're interested.
+
+The researchers wanted to know how attention might differ between people using and not using a fidget spinner. The code below will read data from the study directly into R and subset the data to remove a control group where no fidget spinner was used. This leaves us with two groups in the `Condition` variable: "Spinner" (actively using a fidget spinner) and "Spinner Present" (near someone who was using a fidget spinner).
+
+```{r}
+fidget <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/fidget_spinners.csv") |> 
+  filter(Condition != "No Spinner")
+```
+
+<br>
+
+
+1. Create a graph that can be used to explore how `AttentionScore` differs between people using a fidget spinner and people near someone using a fidget spinner. Describe what the graph shows about the distribution of `AttentionScore` between these two groups.
+
+```{r}
+
+```
+
+**Graph description:**
+
+<br>
+
+
+2. Calculate a difference in sample mean attention scores between the two groups. Use "Spinner" - "Spinner Present" as the order of subtraction. Write a sentence about what the value you get means in context of this example. Additionally, write out a sentence describing the corresponding paramater of interest.
+
+```{r}
+
+```
+
+**Sentence about difference in sample means:**
+
+**Parameter of interest:**
+
+<br>
+
+
+3. Generate a bootstrap distribution to better understand sampling variability in your estimate. Make a histogram of this distribution and comment on what you see. (Note: The `set.seed()` line will ensure we get the same result each time we knit our document. You should replace the number with a number of your choosing.)
+
+```{r}
+set.seed(92520)
+
+```
+
+**Description of bootstrap:**
+
+<br>
+
+
+4. Calculate a confidence interval for the difference in population means that uses your bootstrap distribution. Write your interval below. (Note: I didn't specify a confidence level, so you can choose one)
+
+```{r}
+
+```
+
+**CI:**
+
+<br>
+
+
+5. Provide an interpretation of your confidence interval in context of this example. Additionally, consider whether it seem like fidget spinners help (or hurt) memory on average.
+
+**Interpretation:**
+
+<br>
+
+
+6. Based on your results, what takeaways can we make (or not make) about the impact of fidget spinners on attention?
+
+**Answer:**
+
+<br>
+
+
+7. For practice, make a theory-based confidence interval for this example as well.
+
+```{r}
+
+```
+
+**CI:**
+
+<br>
+
+
+8. How broadly do you think these conclusions (from your CI) might apply? Consider who makes up the sample and whether you think it's likely this was a random sample.
+
+**Answer:**
+
+<br>
+
+
+---
+
+
+# Part 2 - Airbnb Discrimination
+
+The code below will read a data frame into R from a study on potential discrimination by Airbnb hosts. In the experiment, researchers sent requests to Airbnb hosts asking to stay at their properties. The only difference on each request was the name that was used. Researchers chose names that were predominantly associated with certain genders and races (determined in a separate study) and randomly assigned a name to each request. They then recorded whether or not the host gave a positive response indicating the person could stay there. 
+
+Our goal will be to determine the difference in proportion of positive responses given by hosts who received a request from a predominantly Black name versus a predominantly white name.
+
+```{r}
+airbnb <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/airbnb.csv")
+```
+
+<br>
+
+
+9. Make a bar graph (using `geom_bar()`) to compare the proportion of positive responses between the two races used in this study. Briefly describe what the graph shows about our sample. (Note: You want your variable that creates groups (`Race`) to go on the x-axis and your variable of interest (`Response`) to map to fill. Use the `position = "fill"` argument inside `geom_bar()` to get a graph comparing proportions.)
+
+```{r}
+
+```
+
+**Description of graph:**
+
+<br>
+
+
+10. What is the parameter of interest for this example? Write it out in words below.
+
+**Parameter of interest:**
+
+<br>
+
+
+11. We can calculate point estimates by writing code for a bootstrap distribution but leaving out the `generate()` argument (i.e., only using `specify()` and `calculate()`). Calculate a difference in sample proportions in this way and explain what the value you get means in this context.
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+12. Write code to generate a bootstrap distribution. You can reuse your code from the previous question and add in a `generate()` line between `specify()` and `calculate()`. Describe what your bootstrap distribution shows. (Note: remember to set a seed)
+
+```{r}
+
+```
+
+**Description:**
+
+<br>
+
+
+13. Generate a 95% confidence interval using your bootstrap distribution.
+
+```{r}
+
+```
+
+**95% CI:**
+
+<br>
+
+
+14. Interpret your interval in context of this example. Your sentence should be understandable by someone reading a news story about this experiment. (Note: When talking about a difference in percentages, you will use the phrase "percentage points")
+
+**Interpretation:**
+
+<br>
+
+
+15. As practice, calculate a 95% theory-based interval based on this data.
+
+```{r}
+
+```
+
+**95% CI:**
