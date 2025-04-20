@@ -1,0 +1,109 @@
+---
+title: "Homework 6"
+author: "Put your name here"
+date: 'Due: see course timeline for due date'
+output:
+  html_document: default
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+**As a reminder, there are often multiple ways to accomplish the tasks described in your homework assignments. If you use methods that we did not discuss in class (e.g., notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want.**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` and `infer` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(infer)
+```
+
+---
+
+# Climate Change Importance
+
+The 2021 GSS asked respondents how important the issue of climate change was to them, ranging from 1 (not at all important) to 5 (extremely important). The mean value of the importance of climate change to respondents who had health insurance was 3.36 (s = 1.35, n = 6,609). The mean value for respondents who did not have health insurance was 3.17 (s = 1.36, n = 704). [Question from Statistics for Social Understanding, 2nd ed., by Whittier, Wildhagen, and Gold (2024)]
+
+The following code simulates the data in R.
+
+```{r}
+set.seed(2021)
+climate <- data.frame(climate_impt = c(rnorm(6609, mean=3.36, sd=1.35), 
+                                       rnorm(704,  mean=3.17, sd=1.36)),
+                      health_ins = c(rep("yes", 6609), rep("no", 704)))
+
+# view the sample means
+climate |> 
+  summarize(mean = mean(climate_impt), .by = health_ins)
+```
+
+<br>
+
+1. We have not seen the function `rnorm()` before. In your own words, what do you think that function is doing? Why are the means not the same as stated in the problem?
+
+**Answer:**
+
+<br>
+
+
+2. Suppose we want to compare the responses for those that have health insurance against those that do not. Use the `infer` package to create a bootstrap distribution for this situation, and then create a graph to visualize the distribution. Describe the distribution you create.
+
+```{r}
+
+```
+
+**Graph description:** 
+
+<br>
+
+
+3. Generate 90% confidence intervals based on your bootstrap distribution using **both** the percentile method and the standard error method. You will need to calculate the sample statistic for the standard error method. Report the intervals below using proper notation.
+
+```{r}
+
+```
+
+**90% CI (percentile method):** 
+
+**90% CI (SE method):** 
+
+<br>
+
+
+4. Calculate a **90%** confidence interval for this example using a theory-based method. When reporting your interval, make sure to keep the order consistent with what you generated in the previous question.
+
+```{r}
+
+```
+
+**90% CI:** 
+
+<br>
+
+
+5. Pick one of the intervals you created. Write a sentence interpreting your confidence interval in context of this example.
+
+**Interpretation:** 
+
+<br>
+
+
+6. What is your overall takeaway based on your confidence interval? In other words, what can we say about the relationship between having health care insurance and the importance of climate change based on our sample?
+
+**Answer:** 
+
+
+<br> 
+
+
+7. Based on the information we have, do you think it would be appropriate to use the theory-based interval you calculated? Explain why or why not. 
+
+**Answer:** 
+
+
+
