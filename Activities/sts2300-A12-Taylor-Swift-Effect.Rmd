@@ -1,0 +1,92 @@
+---
+title: "Activity 12 - The Taylor Swift Effect?"
+author: "STS 2300"
+date: 'Updated: 2025-04-21'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+```
+
+---
+
+According to a [People.com](https://people.com/travis-kelce-taylor-swift-improved-performance-nfl-8379432) article from fall 2023, Travis Kelce had been performing better when Taylor Swift attended his football games. From the article, Travis Kelce's brother says to him:
+
+> “When T Swift is at the game, you are averaging 99 yards and when you are left with only your friends and remaining family there, you are at 46.5 yards a game.”
+
+We might wonder if Taylor Swift's presence makes Travis Kelce perform better or if this is just random variation that people are talking about.
+
+The code below will read in data for Travis Kelce during the 2023 NFL season. We will focus on two variables: `Rec_Yards` (how many receiving yards he had in the game) and `Swift_Attend` (whether Taylor Swift attended that game).
+
+```{r}
+kelce <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/kelce_stats_23.csv")
+```
+
+--- 
+
+1. Step 1 - What are the null and alternative hypotheses for the claims being made here?
+
+$H_0$:
+
+$H_a$:
+
+<br>
+
+
+2. Step 2 - Calculate an appropriate statistic for this data. In addition, make a graph showing Kelce's receiving yards with and without Taylor Swift in attendance. What do you notice? (Note: Want to make your graph extra fancy? Consider using the [`tayloRswift` package.](https://cran.r-project.org/web/packages/tayloRswift/readme/README.html))
+
+```{r}
+
+```
+
+**Statistic:**
+
+**Graph comments:**
+
+<br>
+
+
+3. Step 3 - Let's generate a null distribution to explore what Travis Kelce's receiving yards would look like in a world where Taylor Swift had no impact on his performance. Graph your null distribution (with your p-value shaded) and comment on what it shows. Calculate the p-value as well.
+
+```{r}
+
+```
+
+**Null distribution comments:**
+
+**p-value = **
+
+**p-value interpretation:**
+
+<br>
+
+
+4. Step 3 - Briefly describe how the null distribution is created using permutation. (Hint: Imagine that you have slips of paper with the number of yards for each game in front of you. How would you use those to create the null distribution?)
+
+**Answer:**
+
+<br>
+
+
+5. Step 4 - Use your p-value to write a conclusion for your hypothesis test in context of this example.
+
+**Conclusion:**
+
+<br>
+
+
+6. Do you think it would make sense to use a theory-based hypothesis test to answer this question? Why or why not? (Hint: It would be the same test / conditions as we discussed with confidence intervals for a difference in means)
+
+**Answer:**
+

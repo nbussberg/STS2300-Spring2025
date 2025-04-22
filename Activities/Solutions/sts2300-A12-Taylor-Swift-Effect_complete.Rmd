@@ -1,0 +1,116 @@
+---
+title: "Activity 12 - The Taylor Swift Effect? (Solutions)"
+author: "STS 2300"
+date: 'Updated: 2025-04-21'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+```
+
+---
+
+According to a [People.com](https://people.com/travis-kelce-taylor-swift-improved-performance-nfl-8379432) article from fall 2023, Travis Kelce had been performing better when Taylor Swift attended his football games. From the article, Travis Kelce's brother says to him:
+
+> “When T Swift is at the game, you are averaging 99 yards and when you are left with only your friends and remaining family there, you are at 46.5 yards a game.”
+
+We might wonder if Taylor Swift's presence makes Travis Kelce perform better or if this is just random variation that people are talking about.
+
+The code below will read in data for Travis Kelce during the 2023 NFL season. We will focus on two variables: `Rec_Yards` (how many receiving yards he had in the game) and `Swift_Attend` (whether Taylor Swift attended that game).
+
+```{r}
+kelce <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/kelce_stats_23.csv")
+```
+
+--- 
+
+1. Step 1 - What are the null and alternative hypotheses for the claims being made here?
+
+$H_0$: Taylor Swift's presence at games does not impact Kelce's receiving yards (i.e., nothing going on)
+
+$H_a$: Travis Kelce does better (more receiving yards) when Taylor Swift attends games (i.e., based on our question of interest)
+
+<br>
+
+
+2. Step 2 - Calculate an appropriate statistic for this data. In addition, make a graph showing Kelce's receiving yards with and without Taylor Swift in attendance. What do you notice? (Note: Want to make your graph extra fancy? Consider using the [`tayloRswift` package.](https://cran.r-project.org/web/packages/tayloRswift/readme/README.html))
+
+```{r, out.width = "50%", fig.align = "center"}
+# Calculating a difference in means (yards with Swift minus yards without)
+
+kelce_xbardiff <- kelce |> 
+  specify(Rec_Yards ~ Swift_Attend) |> 
+  calculate(stat = "diff in means", order = c("Yes", "No"))
+kelce_xbardiff
+
+ggplot(kelce, aes(x = Rec_Yards, y = Swift_Attend)) +
+  geom_boxplot()
+```
+
+**Statistic:** Travis Kelce averaged 26 more receiving yards in the games Taylor Swift attended than in the games she did not attend.
+
+**Graph comments:** We can see that the Q1, median, Q3, and max receiving yards are all higher when she attends. However, there is a fair amount of overlap between the distributions.
+
+<br>
+
+
+3. Step 3 - Let's generate a null distribution to explore what Travis Kelce's receiving yards would look like in a world where Taylor Swift had no impact on his performance. Graph your null distribution (with your p-value shaded) and comment on what it shows. Calculate the p-value as well.
+
+```{r}
+set.seed(127115)
+
+kelce_null <- kelce |> 
+  specify(Rec_Yards ~ Swift_Attend) |> 
+  hypothesize(null = "independence") |> 
+  generate(reps = 1000, type = "permute") |> 
+  calculate(stat = "diff in means", order = c("Yes", "No"))
+
+visualize(kelce_null) +
+  shade_pvalue(obs_stat = kelce_xbardiff,
+               direction = "right")
+
+kelce_null |> 
+  get_pvalue(obs_stat = kelce_xbardiff,
+               direction = "right")
+```
+
+**Null distribution comments:** The null distribution is centered around 0 (because our null hypothesis said there is no real difference when Taylor Swift attends games or not), and it contains differences in sample means from under -40 to over +40. The shape is roughly bell-shaped.
+
+**p-value = ** 0.133
+
+**p-value interpretation:** In a world where Taylor Swift's attendance has no impact on Travis Kelce's receiving yards, we would see his average receiving yards in games she attends be 26 or more yards higher than in games she doesn't attend around 13.3% of the time.
+
+<br>
+
+
+4. Step 3 - Briefly describe how the null distribution is created using permutation. (Hint: Imagine that you have slips of paper with the number of yards for each game in front of you. How would you use those to create the null distribution?)
+
+**Answer:** We created many different possible samples from a world where Taylor Swift's attendance did not impact receiving yards at all. To do this, we shuffled up the receiving yards, reassigned them to new values in the `Swift_Attend` column, and calculated a new difference in sample means. This was done 1,000 times and we graphed the differences in sample means for all of these "samples" from a world where our null hypothesis was true.
+
+<br>
+
+
+5. Step 4 - Use your p-value to write a conclusion for your hypothesis test in context of this example.
+
+**Conclusion:** Because our p-value is above 0.05, we fail to reject the null hypothesis. There is insufficient evidence to support Travis Kelce does better (more receiving yards) when Taylor Swift attends games.
+
+**Note:** I don't know for sure if the null or alternative is true, but my data was consistent with a world where the null is true, so I at least can't rule it out as a possibility. In other words, I am **not** "accepting the null" because my data is also consistent with a world where the alternative is true.
+
+<br>
+
+
+6. Do you think it would make sense to use a theory-based hypothesis test to answer this question? Why or why not? (Hint: It would be the same test / conditions as we discussed with confidence intervals for a difference in means)
+
+**Answer:** There were only 9 games Taylor Swift attended and 6 she did not. These are very small sample sizes. If our data comes from populations with a bell-shape, the sample size isn't a problem. However, it's often hard to know if it does, and we'd have to use our data to determine if that was a reasonable assumption. We also should only use these tests if our data is a random sample (although we also want this for our simulation-based methods).
+
