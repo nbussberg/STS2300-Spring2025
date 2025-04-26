@@ -1,0 +1,222 @@
+---
+title: "Activity 13 - Practicing Hypothesis Tests for Single Values (Solutions)"
+author: "STS 2300"
+date: 'Updated: 2025-04-26'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+---
+
+
+# Part 1 - Fan Attendance and Home Field Advantage
+
+Let's suppose that we're interested in studying the concept of home field advantage in Major League Baseball during the 2020 season when fan attendance was restricted due to COVID-19. If there's no such thing as home field advantage, the home team will win just as often as the away team (half the time). If there *is* an advantage to the home team, they will win over half the time. To carry out this test, use a significance level of $\alpha = 0.05$.
+
+
+<br>
+
+
+1. **Step 1** - Write out appropriate null and alternative hypotheses below. Define $p$ for this specific example.
+
+**$H_0: p = 0.5$**
+
+**$H_A: p > 0.5$**
+
+**p = the population proportion of all games that are won by the home team**
+
+<br>
+
+
+2. **Step 2** - The code below will read data from the 2020 MLB season into R. We will consider this to be a random sample of the *possible* games that could have been played without fans. Create a graphical and numeric summary of this data in context of our example. (Note: We are interested in the `HomeWon` variable and how often it is `TRUE`. The variable has been converted from logical to character to prevent issues with the `infer` package.)
+
+```{r}
+mlb <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/mlb_2020.csv") |> 
+  mutate(HomeWon = as.factor(HomeWon))
+
+mlb_phat <- mlb |> 
+  specify(HomeWon ~ NULL, success = "TRUE") |> 
+  calculate(stat = "prop")
+
+mlb_phat
+```
+
+$\hat{p} =$ 0.557
+
+<br>
+
+
+3. **Step 3** - Use the `infer` package to create a null distribution and shade in your p-value on the picture. Then calculate the p-value and write a sentence about what the p-value means for this specific example. Remove `eval = FALSE` when you're ready to run your code. (Note: You aren't giving a formal conclusion yet.)
+
+```{r, eval = TRUE}
+set.seed(4262411)
+
+mlb_null <- mlb |> 
+  specify(HomeWon ~ NULL, success = "TRUE") |> 
+  hypothesize(null = "point", p = 0.5) |> 
+  generate(reps = 1000, type = "draw") |> 
+  calculate(stat = "prop")
+
+visualize(mlb_null) +
+  shade_pvalue(obs_stat = mlb_phat, 
+               direction = "right")
+
+get_p_value(mlb_null, 
+            obs_stat = mlb_phat, 
+            direction = "right")
+```
+
+**p-value = ** 0
+
+**Sentence about p-value meaning:** In a world with no home field advantage (home teams win 50% of the time), we would almost never see a random sample with a sample proportion of 0.557 or higher. In our simulation of 1,000 random samples from the world without home field advantage, 0 of them had a sample proportion of 0.557 or higher.
+
+<br>
+
+
+4. **Step 4** - Write a formal conclusion based on your p-value.
+
+**Conclusion: ** Since my p-value is approximately 0, I reject the null hypothesis. There is **very strong** evidence to conclude MLB home teams had an advantage in 2020 even without fans in attendance.
+
+<br>
+
+
+6. Try using the `prop.test()` function to carry out a theory-based hypothesis test. Do you get similar results?
+
+```{r}
+table(mlb$HomeWon)
+prop.test(x = 500,
+          n = 398 + 500,
+          p = 0.5,
+          alternative = "greater")
+```
+
+<br>
+
+
+7. Take a look at the confidence interval that is part of the theory-based test output. Explain how this confidence interval supports the conclusion you reached with your hypothesis test. In other words, how are they giving us the same type of information in their own way?
+
+**Answer:** The confidence interval of (0.529, 1) tells me I am 95% confident the home team wins between 52.9% and 100% of the time. Since all of these values are above 0.5, this also suggests I have sufficient evidence of a home field advantage (i.e., I think p > 0.5).
+
+<br>
+
+
+8. In the previous season, home teams won 52.9% of their games. Suppose we had instead used our hypothesis test to look at $H_0: p = 0.529$ and $H_a: p \ne 0.529$ for the true home win percentage in the 2020 season without fans. What kind of conclusion do you think we would have reached for this test and why? (Hint: Consider the confidence interval discussed in question 7 and how our p-value may differ for this test than for the original one we did based on how it relates to that interval.)
+
+**Answer:** My confidence interval just barely includes 0.529. This suggests I might not be able to reject the null hypothesis that p = 0.529 because my sample is somewhat compatible with a world where home teams win 52.9% of the time.
+
+<br>
+
+
+---
+
+# Part 2 - Prius Mileage
+
+Suppose Toyota is claiming that their newest Prius Prime model gets over 100 miles per gallon on average. A car review website plans to test this claim. (Use $\alpha = 0.10$ for your significance level)
+
+<br>
+
+
+9. **Step 1** - Write out the appropriate hypotheses for this problem. Define any parameters below. (Note: You will not be using $p$ in this example.)
+
+$H_0: \mu = 100$
+
+$H_A: \mu > 100$
+
+**Define parameter(s):** $\mu$ = the population mean miles per gallon for the newest Prius Prime model
+
+<br>
+
+
+10. **Step 2** - Gather and summarize data
+
+The car review website has gathered data from 19 Prius Prime owners. The `average_mpg` variable is what each owner reported as their average miles per gallon over the past month. Below is the code to read in this data. 
+
+Generate a graph to view the data and then calculate an appropriate statistic to summarize the data in relation to these hypotheses. Write a couple sentences about what your graph and statistic show you.
+
+```{r}
+prius <- read.csv("https://www.openintro.org/data/csv/prius_mpg.csv")
+
+prius_xbar <- mean(prius$average_mpg)
+prius_xbar
+
+ggplot(prius) +
+  geom_histogram(aes(x = average_mpg), 
+                 binwidth = 20, 
+                 color = "white") +
+  geom_vline(xintercept = 100, 
+             color = "cyan2", 
+             linewidth = 2)
+```
+
+**Statistic:** $\bar{x} = 144.86$ mpg
+
+**Description:** The data includes values from around 50 to around 300. While $\mu = 100$ is not in the center of the data, it doesn't look too far off. At this point, I'm not sure whether I will reject this null hypothesis in favor of an alternative hypothesis that mu is higher than 100.
+
+<br>
+
+
+11. **Step 3** - Use the `infer` package to generate a null distribution. Visualize your p-value on the distribution and calculate the p-value. Write a sentence explaining what the p-value means in context. (Note: You are not writing a conclusion for your hypothesis test yet.)
+
+```{r}
+set.seed(94027)
+
+prius_null <- prius |> 
+  specify(formula = average_mpg ~ NULL) |> 
+  hypothesize(null = "point", mu = 100) |> 
+  generate(reps = 1000, type = "bootstrap") |> 
+  calculate(stat = "mean")
+
+visualize(prius_null) +
+  shade_pvalue(obs_stat = prius_xbar, 
+               direction = "right")
+
+prius_pval <- prius_null |> 
+  get_pvalue(obs_stat = prius_xbar, 
+             direction = "right")
+prius_pval
+```
+
+**p-value =** 0.001
+
+**Sentence:** In a world where the newest Prius Prime model has a population mileage of 100 mpg, the probability of getting a random sample with a sample mean of 144.86 mpg or higher is only 0.001. In other words, our data is not very compatible with a world where $\mu = 100$.
+
+<br>
+
+
+12. **Step 4** - Write a conclusion for your hypothesis test Make sure that you address each of the important elements mentioned in class.
+
+**Conclusion:** Because our p-value of 0.001 is less than the significance level of 0.1, I will reject the null hypothesis. There is really strong evidence to conclude that the population mean miles per gallon for the newest Prius Prime model is actually greater than 100 mpg.
+
+
+<br>
+
+
+13. What questions or concerns might we have before applying these conclusions too broadly? Consider what information you were given, how the data was collected, etc. (Note: Go beyond just considering the sample size.)
+
+**Answer:** The sample size is pretty small. We might wonder who signed up to take part in this study and whether they are actually a random sample. We might wonder why there there is a gap in reported mileages (is this people using their cars differently than others?). The data was reported by each owner and there may not have been consistent methods in how they determined mpg (e.g., some may have just guessed or exaggerated).
+
+<br>
+
+
+14. Practice write code to use an appropriate function to calculate a p-value for a theory-based test for this example.
+
+```{r}
+t.test(prius$average_mpg,
+       mu = 100,
+       alternative = "greater")
+```
+

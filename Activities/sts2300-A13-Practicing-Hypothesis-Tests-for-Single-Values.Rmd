@@ -1,0 +1,175 @@
+---
+title: "Activity 13 - Practicing Hypothesis Tests for Single Values"
+author: "STS 2300"
+date: 'Updated: 2025-04-26'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+---
+
+
+# Part 1 - Fan Attendance and Home Field Advantage
+
+Let's suppose that we're interested in studying the concept of home field advantage in Major League Baseball during the 2020 season when fan attendance was restricted due to COVID-19. If there's no such thing as home field advantage, the home team will win just as often as the away team (half the time). If there *is* an advantage to the home team, they will win over half the time. To carry out this test, use a significance level of $\alpha = 0.05$.
+
+
+<br>
+
+
+1. **Step 1** - Write out appropriate null and alternative hypotheses below. Define $p$ for this specific example.
+
+**$H_0:$**
+
+**$H_a:$**
+
+**p =**
+
+<br>
+
+
+2. **Step 2** - The code below will read data from the 2020 MLB season into R. We will consider this to be a random sample of the *possible* games that could have been played without fans. Create a graphical and numeric summary of this data in context of our example. (Note: We are interested in the `HomeWon` variable and how often it is `TRUE`. The variable has been converted from logical to character to prevent issues with the `infer` package.)
+
+```{r}
+mlb <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/mlb_2020.csv") |> 
+  mutate(HomeWon = as.factor(HomeWon))
+```
+
+$\hat{p} =$
+
+<br>
+
+
+3. **Step 3** - Use the `infer` package to create a null distribution and shade in your p-value on the picture. Then calculate the p-value and write a sentence about what the p-value means for this specific example. Remove `eval = FALSE` when you're ready to run your code. (Note: You aren't giving a formal conclusion yet.)
+
+```{r, eval = FALSE}
+set.seed()
+mlb_null <- mlb |> 
+  specify() |> 
+  hypothesize() |> 
+  generate() |> 
+  calculate()
+```
+
+**p-value = **
+
+**Sentence about p-value meaning: **
+
+<br>
+
+
+4. **Step 4** - Write a formal conclusion based on your p-value.
+
+**Conclusion: **
+
+<br>
+
+
+6. Try using the `prop.test()` function to carry out a theory-based hypothesis test. Do you get similar results?
+
+```{r}
+
+```
+
+<br>
+
+
+7. Take a look at the confidence interval that is part of the theory-based test output. Explain how this confidence interval supports the conclusion you reached with your hypothesis test. In other words, how are they giving us the same type of information in their own way?
+
+**Answer:**
+
+<br>
+
+
+8. In the previous season, home teams won 52.9% of their games. Suppose we had instead used our hypothesis test to look at $H_0: p = 0.529$ and $H_a: p \ne 0.529$ for the true home win percentage in the 2020 season without fans. What kind of conclusion do you think we would have reached for this test and why? (Hint: Consider the confidence interval discussed in question 7 and how our p-value may differ for this test than for the original one we did based on how it relates to that interval.)
+
+**Answer:**
+
+<br>
+
+
+---
+
+# Part 2 - Prius Mileage
+
+Suppose Toyota is claiming that their newest Prius Prime model gets over 100 miles per gallon on average. A car review website plans to test this claim. (Use $\alpha = 0.10$ for your significance level)
+
+<br>
+
+
+9. **Step 1** - Write out the appropriate hypotheses for this problem. Define any parameters below. (Note: You will not be using $p$ in this example.)
+
+$H_0:$
+
+$H_A:$
+
+**Define parameter(s):**
+
+<br>
+
+
+10. **Step 2** - Gather and summarize data
+
+The car review website has gathered data from 19 Prius Prime owners. The `average_mpg` variable is what each owner reported as their average miles per gallon over the past month. Below is the code to read in this data. 
+
+Generate a graph to view the data and then calculate an appropriate statistic to summarize the data in relation to these hypotheses. Write a couple sentences about what your graph and statistic show you.
+
+```{r}
+prius <- read.csv("https://www.openintro.org/data/csv/prius_mpg.csv")
+```
+
+**Statistic:**
+
+**Description:**
+
+<br>
+
+
+11. **Step 3** - Use the `infer` package to generate a null distribution. Visualize your p-value on the distribution and calculate the p-value. Write a sentence explaining what the p-value means in context. (Note: You are not writing a conclusion for your hypothesis test yet.)
+
+```{r}
+# Remember to set a seed
+```
+
+**p-value =**
+
+**Sentence:**
+
+<br>
+
+
+12. **Step 4** - Write a conclusion for your hypothesis test Make sure that you address each of the important elements mentioned in class.
+
+**Conclusion:**
+
+
+<br>
+
+
+13. What questions or concerns might we have before applying these conclusions too broadly? Consider what information you were given, how the data was collected, etc. (Note: Go beyond just considering the sample size.)
+
+**Answer:**
+
+<br>
+
+
+14. Practice write code to use an appropriate function to calculate a p-value for a theory-based test for this example.
+
+```{r}
+
+```
+
