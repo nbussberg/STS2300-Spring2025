@@ -1,0 +1,217 @@
+---
+title: "Activity 14 - Practicing Hypothesis Tests for Differences (Solutions)"
+author: "STS 2300"
+date: 'Updated: 2025-05-01'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+---
+
+# COVID-19 Antibodies Example
+
+The example for this activity comes from a [2020 New York Times article](https://www.nytimes.com/2020/08/19/health/coronavirus-fishing-boat.html) about a ship that had a coronavirus outbreak while at sea. This was before COVID-19 vaccines had been developed and at a time when people were still learning basic information about the virus. Before setting sail, the crew had been tested for COVID-19 antibodies, and 3 of the 120 sailors had these antibodies while the other 117 did not. Below is a quote from the article.
+
+> The three sailors confirmed to have neutralizing antibodies did not test positive for the virus during the course of the study; 103 of the remaining 117 became infected. "These numbers may be small, but they’re highly significant", Dr. Greninger said.
+
+We will conduct a hypothesis test to see if we can see what Dr. Greninger means when he says these results are "highly significant".
+
+<br>
+
+
+1. Step 1 - How could we set up our hypotheses based on our likely question of interest? Try doing this both in symbols and in words.
+
+**In symbols...** 
+
+$H_0$: $p_1 - p_2 = 0$ 
+
+$H_a$: $p_1 - p_2 \ne 0$
+
+**Parameter definitions:** p is the population proportion of people infected with COVID-19 (where 1 represents people who already have COVID-19 antibodies and 2 represents people who don't)
+
+
+**In words...**
+
+$H_0$: There is no difference in the probability of getting COVID-19 if you have antibodies for it versus if you do not.
+
+$H_a$: There is a difference in the probability of getting COVID-19 if you have antibodies for it versus if you do not.
+
+<br>
+
+
+2. Step 2 - The data is mentioned at the top of this activity. I've included code to read it into R below. Create a graph displaying the data in relation to our question of interest and calculate an appropriate statistic for this question.
+
+```{r}
+ship <- data.frame(antibodies = c(rep("yes", 3), rep("no", 117)),
+                   infected = c(rep("no", 17), rep("yes", 103)))
+
+ship_diffinphat <- ship |> 
+  specify(infected ~ antibodies, success = "yes") |> 
+  calculate(stat = "diff in props", order = c("yes", "no"))
+ship_diffinphat
+
+ggplot(ship, aes(x = antibodies, fill = infected)) +
+  geom_bar(position = "fill")
+```
+
+**Statistic:** -0.88
+
+<br>
+
+
+3. Step 3 - Create a null distribution and visualize it with a p-value shaded in. Then calculate the p-value and write a sentence about what the p-value means in context of this example.
+
+```{r}
+set.seed(512024)
+ship_null <- ship |> 
+  specify(infected ~ antibodies, success = "yes") |> 
+  hypothesize(null = "independence") |> 
+  generate(reps = 1000, type = "permute") |> 
+  calculate(stat = "diff in props", order = c("yes", "no"))
+
+visualize(ship_null) +
+  shade_pvalue(obs_stat = ship_diffinphat,
+               direction = "both")
+
+ship_null |> 
+    get_pvalue(obs_stat = ship_diffinphat,
+               direction = "both")
+```
+
+**p-value = ** 0.004
+
+**Sentence: ** In a world where there is no difference in the probability of getting COVID-19 if you have antibodies for it versus if you do not, there is only a 0.4% chance of seeing data as extreme as the actual data from the ship.
+
+<br>
+
+
+4. Step 4 - Write a formal conclusion for this example.
+
+**Conclusion:** Since our p-value of 0.004 is less than the significance level of 0.05, so we reject the null hypothesis. There is convincing evidence to conclude the population proportion who get COVID-19 differs between those with and without COVID-19 antibodies.
+
+<br>
+
+
+5. Were the results "highly significant"? In other words, are we still able to learn something about the role of antibodies despite only having three people in the group that had them?
+
+**Answer:** Yes the results were highly significant. Our data is not very compatible with a world where the null is true, which allowed us to learn (despite one group only having three people) that COVID-19 antibodies probably do matter for whether someone contracts COVID-19.
+
+<br>
+
+
+6. Besides the sample size, are there any other reasons we may want to be cautious about attributing the whole difference we're seeing to whether the person had antibodies or not? (Hint: What other ways may these people have differed from the people without antibodies?)
+
+**Answer:** The three people with COVID-19 antibodies may have behaved differently specifically because they had previously had COVID-19 (e.g., more cautious, susceptible to other illnesses that kept them isolated, etc.). These people also may have been different in other ways beforehand, which is what led them to get the antibodies in the first place.
+
+What this essentially means is we need to be careful about saying that COVID-19 antibodies are the reason for the difference we saw. Realistically, researchers might see this and say "hmm, maybe something is there" and do a better study.
+
+**Separate note**: We would not be able to use our usual theory-based hypothesis test for this example because one group doesn't have 5 successes OR 5 failures.
+
+In a theory-based test (for a difference in proportions), we assume:
+
+  - The two groups come from random samples *or* the groups are created through random assignment within a sample
+  - We have "enough" observations in each group (usually we say this is OK if each group has at least 5 success and 5 failures)
+  
+<br>
+
+
+---
+
+# Revisiting Fidget Spinners Example
+
+We previously looked at some data where people used fidget spinners and researchers measured their attention and memory. Suppose we want to compare the attention score between people who are near a fidget spinner (but not the one using it) and people with no spinner present. We suspect that those without a spinner present might have a higher attention score. (Use $\alpha = 0.05$ for your significance level.)
+
+<br>
+
+7. **Step 1** - Write out the appropriate hypotheses for this problem. Define any parameters below.
+
+$H_0: \mu_1 - \mu_2 = 0$ 
+
+$H_A: \mu_1 - \mu_2 > 0$
+
+**Define parameter(s):** $\mu$ is the population mean attention score and group 1 represents those without a spinner present and group 2 represents those near someone using a fidget spinner
+
+<br>
+
+
+8. **Step 2** - Below is code to read in the data and to remove the third group (those actively using a spinner). Generate a graph to view the data and then calculate an appropriate statistic to summarize the data for these hypotheses. Write a couple sentences about what you notice.
+
+```{r}
+fidget <- read.csv("https://raw.githubusercontent.com/nbussberg/STS2300-Spring2025/refs/heads/main/Data/fidget_spinners.csv") |> 
+  filter(Condition != "Spinner")
+
+fidget_xbardiff <- fidget |> 
+  specify(AttentionScore ~ Condition) |> 
+  calculate(stat = "diff in means", order = c("No Spinner", "Spinner Present"))
+fidget_xbardiff
+
+ggplot(fidget, aes(x = AttentionScore, y = Condition)) +
+  geom_boxplot()
+```
+
+**Statistic:** $\bar{x}_1 - \bar{x}_2 = 0.281$
+
+**Description:** The attention scores tend to be a bit higher without a spinner present (mean is 0.281 higher, median and Q1 are higher on boxplots), but there is a lot of overlap in the distributions of the two conditions.
+
+<br>
+
+
+9. **Step 3** - Use the `infer` package to generate a null distribution. Visualize your p-value on the distribution and calculate the p-value. Write a sentence explaining what the p-value means in context. (Note: You are not writing a conclusion for your hypothesis test yet.)
+
+```{r}
+set.seed(28193)
+fidget_null <- fidget |> 
+  specify(AttentionScore ~ Condition) |> 
+  hypothesize(null = "independence") |> 
+  generate(reps = 1000, type = "permute") |> 
+  calculate(stat = "diff in means", order = c("No Spinner", "Spinner Present"))
+
+visualize(fidget_null) +
+  shade_pvalue(obs_stat = fidget_xbardiff,
+               direction = "right")
+
+fidget_null |> 
+    get_pvalue(obs_stat = fidget_xbardiff,
+               direction = "right")
+```
+
+**p-value =** 0.091
+
+**Sentence:** In a world where the population mean attention scores are the same regardless of whether a fidget spinner is being used nearby, we would see the no spinner sample mean be at least 0.281 or higher than the spinner present mean around 9% of the time.
+
+<br>
+
+
+10. **Step 4** - Write a conclusion for your hypothesis test based on the p-value.
+
+**Conclusion:** Since the p-value of 0.091 is higher than our 0.05 significance level, we fail to reject the null hypothesis. There is not sufficient evidence to claim that the population mean attention score is higher for people without a fidget spinner being used nearby.
+
+
+<br>
+
+
+11. Does this mean that fidget spinners aren't distracting for people nearby? If not, what does it mean?
+
+**Answer:** Not necessarily. This just means our data alone was not enough to convince us of a difference in population means. With additional data, that might change. (Note: It's also possible that fidget spinners affect some people more than others. In that case, looking at the average over all people may be somewhat misleading in an attempt to uncover their impact.)
+
+
+<br>
+
+
+12. A 95% confidence interval for the difference in population means would be around (-0.2, 0.7). Discuss how this does or does not agree with your hypothesis test conclusion.
+
+**Answer:** With this confidence interval, we would start our interpretation by saying we could not be 95% confident either population mean was bigger than the other. This is similar to saying we do not have sufficient evidence one mean is bigger. The second part of our confidence interval interpretation would state that we are 95% confident the difference in population mean attention spans is anywhere from 0.7 higher for those with no spinner to 0.2 higher for those with a spinner present. This highlights what we said earlier about not ruling out that one population mean is bigger.
