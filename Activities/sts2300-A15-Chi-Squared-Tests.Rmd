@@ -1,0 +1,104 @@
+---
+title: "Activity 15 - Chi-Squared Tests"
+author: "STS 2300"
+date: 'Updated: 2025-05-03'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+---
+
+# TV Viewing Habits
+
+An [online survey](https://today.yougov.com/entertainment/articles/42297-tv-and-streaming-yougov-poll-april-21-25-2022) explored people's TV viewing habits and gathered some demographic information. There were four age categories that people could choose from. They were also asked how often they binge watch shows. The code below reads the data into R and will be used beginning in Step 2.
+
+```{r}
+tv <- data.frame(age = c(rep("under 30", 183), rep("30 - 44", 220),
+                         rep("45 - 64", 313), rep("65+", 213)),
+                 binge_tv = c(rep("always", 17), rep("most of the time", 53), 
+                              rep("half the time", 41), rep("sometimes", 59), 
+                              rep("never", 13),
+                              rep("always", 31), rep("most of the time", 46), 
+                              rep("half the time", 36), rep("sometimes", 76), 
+                              rep("never", 31),
+                              rep("always", 12), rep("most of the time", 41), 
+                              rep("half the time", 60), rep("sometimes", 161), 
+                              rep("never", 39),
+                              rep("always", 6), rep("most of the time", 15), 
+                              rep("half the time", 28), rep("sometimes", 121), 
+                              rep("never", 43)))
+```
+
+<br>
+
+
+1. Step 1 - Suppose we wanted to know something about how TV viewing habits related to age. What would the hypotheses be for a Chi-squared test based on this information?
+
+$H_0$:
+
+$H_a$:
+
+<br>
+
+
+2. Step 2 - The code at the top reads the data from the survey into R. Create a graph displaying the data in relation to our question of interest. What do you notice in the graph?
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+3. Step 2 continued - Calculate a chi-squared statistic for this question.
+
+```{r}
+
+```
+
+**Statistic:**
+
+<br>
+
+
+4. Step 3 - Create a null distribution and visualize it with a p-value shaded in. Then calculate the p-value and write a sentence about what the p-value means in context of this example.
+
+```{r}
+
+```
+
+**p-value = **
+
+**Sentence: **
+
+<br>
+
+
+5. Step 4 - Write a formal conclusion for this example.
+
+**Conclusion:**
+
+<br>
+
+
+6. How can we know which direction to shade for the p-value in this (or any) chi-squared example?
+
+**Answer:**
+
+<br>
